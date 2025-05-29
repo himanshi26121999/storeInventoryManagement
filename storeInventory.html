@@ -28,7 +28,7 @@
                 itemPrice:event.target.price.value,
                 itemQuantity:event.target.quantity.value
             }
-            axios.post("https://crudcrud.com/api/598858213c814421861912cb49f0cfa9/inventoryData",myObj)
+            axios.post("https://crudcrud.com/api/a27f3045b4dd4f83b1af4cdee65ad0d6/inventoryData",myObj)
             .then((res)=>{
                 console.log(res.data);
             showInventoryReportOnScreen(res.data);
@@ -41,7 +41,7 @@
         //after relodind the page everything on page get removed
         //so we use get request to show all the data on the screen
         window.addEventListener("DOMContentLoaded",()=>{
-            axios.get("https://crudcrud.com/api/598858213c814421861912cb49f0cfa9/inventoryData")
+            axios.get("https://crudcrud.com/api/a27f3045b4dd4f83b1af4cdee65ad0d6/inventoryData")
             .then((res)=>{
                 console.log(res.data);
                 for(let i=0;i<res.data.length;i++){
@@ -58,22 +58,21 @@
         function showInventoryReportOnScreen(myObj){ 
             const parentElement=document.getElementById("list-of-all-items");
             const childHTML=`<li id=${myObj._id}>${myObj.itemName}_${myObj.itemDescription}_${myObj.itemPrice}_${myObj.itemQuantity}
-                <button onclick=buyOneItem('${myObj._id}','${myObj.itemName}','${myObj.itemDescription}','${myObj.itemPrice}','${myObj.itemQuantity}')>Buy1</button>
-                <button onclick=buyTwoItems('${myObj._id}','${myObj.itemName}','${myObj.itemDescription}','${myObj.itemPrice}','${myObj.itemQuantity}')>Buy2</button>
-                <button onclick=buyThreeItems('${myObj._id}','${myObj.itemName}','${myObj.itemDescription}','${myObj.itemPrice}','${myObj.itemQuantity}')>Buy3</button></li>`;
+                <button onclick=buyOneItem('${myObj.itemName}','${myObj.itemDescription}','${myObj.itemPrice}','${myObj.itemQuantity}','${myObj._id}')>Buy1</button>
+                <button onclick=buyTwoItems('${myObj.itemName}','${myObj.itemDescription}','${myObj.itemPrice}','${myObj.itemQuantity}','${myObj._id}')>Buy2</button>
+                <button onclick=buyThreeItems('${myObj.itemName}','${myObj.itemDescription}','${myObj.itemPrice}','${myObj.itemQuantity}','${myObj._id}')>Buy3</button></li>`;
                 parentElement.innerHTML=parentElement.innerHTML+childHTML;
         }
        /*To Do List
        *when we click on buy1 button then this function will work
-        *@para id,itemName,itemDescription,itemPrice,itemQuantity
+        *@para itemName,itemDescription,itemPrice,itemQuantity,id
         *to update the item quantity we call for put request.
         *to update the item quantity to screen
         -first step to remove the old item from screen
-        -create the new element with updated item quantity
-        *append this element
+        -call the function which show updated data on screen
         */
-        function buyOneItem(id,itemName,itemDescription,itemPrice,itemQuantity){
-            axios.put(`https://crudcrud.com/api/598858213c814421861912cb49f0cfa9/inventoryData/${id}`,
+        function buyOneItem(itemName,itemDescription,itemPrice,itemQuantity,id){
+            axios.put(`https://crudcrud.com/api/a27f3045b4dd4f83b1af4cdee65ad0d6/inventoryData/${id}`,
             {
                 itemName:itemName,
                 itemDescription:itemDescription,
@@ -86,33 +85,28 @@
             .catch((error)=>{
                 console.log(error);
             })
-          const parentElement=document.getElementById("list-of-all-items");
+            const parentElement=document.getElementById("list-of-all-items");
           const childToBeDeleted=document.getElementById(id);
          parentElement.removeChild(childToBeDeleted);
-         const myObj={
-            id:id,
+         const updatedItem={
             itemName:itemName,
             itemDescription:itemDescription,
             itemPrice:itemPrice,
-            itemQuantity:itemQuantity-1
+            itemQuantity:itemQuantity-1,
+            _id:id
          };
-            const childHTML=`<li id=${myObj.id}>${myObj.itemName}_${myObj.itemDescription}_${myObj.itemPrice}_${myObj.itemQuantity}
-                <button onclick=buyOneItem('${myObj.id}','${myObj.itemName}','${myObj.itemDescription}','${myObj.itemPrice}','${myObj.itemQuantity}')>Buy1</button>
-                <button onclick=buyTwoItems('${myObj.id}','${myObj.itemName}','${myObj.itemDescription}','${myObj.itemPrice}','${myObj.itemQuantity}')>Buy2</button>
-                <button onclick=buyThreeItems('${myObj.id}','${myObj.itemName}','${myObj.itemDescription}','${myObj.itemPrice}','${myObj.itemQuantity}')>Buy3</button></li>`;
-                parentElement.innerHTML=parentElement.innerHTML+childHTML;
+            showInventoryReportOnScreen(updatedItem);
         }
         /*To Do List
        *when we click on buy2 button then this function will work
-        *@para id,itemName,itemDescription,itemPrice,itemQuantity
+        *@para itemName,itemDescription,itemPrice,itemQuantity,id
         *to update the item quantity we call for put request.
         *to update the item quantity to screen
         -first step to remove the old item from screen
-        -create the new element with updated item quantity
-        *append this element
+        -call the function which show updated data on screen
         */
-        function buyTwoItems(id,itemName,itemDescription,itemPrice,itemQuantity){
-            axios.put(`https://crudcrud.com/api/598858213c814421861912cb49f0cfa9/inventoryData/${id}`,
+        function buyTwoItems(itemName,itemDescription,itemPrice,itemQuantity,id){
+            axios.put(`https://crudcrud.com/api/a27f3045b4dd4f83b1af4cdee65ad0d6/inventoryData/${id}`,
             {
                 itemName:itemName,
                 itemDescription:itemDescription,
@@ -128,30 +122,25 @@
           const parentElement=document.getElementById("list-of-all-items");
           const childToBeDeleted=document.getElementById(id);
          parentElement.removeChild(childToBeDeleted);
-         const myObj={
-            id:id,
+         const updatedItem={
             itemName:itemName,
             itemDescription:itemDescription,
             itemPrice:itemPrice,
-            itemQuantity:itemQuantity-2
+            itemQuantity:itemQuantity-2,
+            _id:id
          };
-            const childHTML=`<li id=${myObj.id}>${myObj.itemName}_${myObj.itemDescription}_${myObj.itemPrice}_${myObj.itemQuantity}
-                <button onclick=buyOneItem('${myObj.id}','${myObj.itemName}','${myObj.itemDescription}','${myObj.itemPrice}','${myObj.itemQuantity}')>Buy1</button>
-                <button onclick=buyTwoItems('${myObj.id}','${myObj.itemName}','${myObj.itemDescription}','${myObj.itemPrice}','${myObj.itemQuantity}')>Buy2</button>
-                <button onclick=buyThreeItems('${myObj.id}','${myObj.itemName}','${myObj.itemDescription}','${myObj.itemPrice}','${myObj.itemQuantity}')>Buy3</button></li>`;
-                parentElement.innerHTML=parentElement.innerHTML+childHTML;
+            showInventoryReportOnScreen(updatedItem);
         }
         /*To Do List
        *when we click on buy3 button then this function will work
-        *@para id,itemName,itemDescription,itemPrice,itemQuantity
+        *@para itemName,itemDescription,itemPrice,itemQuantity,id
         *to update the item quantity we call for put request.
         *to update the item quantity to screen
         -first step to remove the old item from screen
-        -create the new element with updated item quantity
-        *append this element
+        -call the function which show updated data on screen
         */
-        function buyThreeItems(id,itemName,itemDescription,itemPrice,itemQuantity){
-            axios.put(`https://crudcrud.com/api/598858213c814421861912cb49f0cfa9/inventoryData/${id}`,
+        function buyThreeItems(itemName,itemDescription,itemPrice,itemQuantity,id){
+            axios.put(`https://crudcrud.com/api/a27f3045b4dd4f83b1af4cdee65ad0d6/inventoryData/${id}`,
             {
                 itemName:itemName,
                 itemDescription:itemDescription,
@@ -167,18 +156,14 @@
           const parentElement=document.getElementById("list-of-all-items");
           const childToBeDeleted=document.getElementById(id);
          parentElement.removeChild(childToBeDeleted);
-         const myObj={
-            id:id,
+         const updatedItem={
             itemName:itemName,
             itemDescription:itemDescription,
             itemPrice:itemPrice,
-            itemQuantity:itemQuantity-3
+            itemQuantity:itemQuantity-3,
+            _id:id
          };
-            const childHTML=`<li id=${myObj.id}>${myObj.itemName}_${myObj.itemDescription}_${myObj.itemPrice}_${myObj.itemQuantity}
-                <button onclick=buyOneItem('${myObj.id}','${myObj.itemName}','${myObj.itemDescription}','${myObj.itemPrice}','${myObj.itemQuantity}')>Buy1</button>
-                <button onclick=buyTwoItems('${myObj.id}','${myObj.itemName}','${myObj.itemDescription}','${myObj.itemPrice}','${myObj.itemQuantity}')>Buy2</button>
-                <button onclick=buyThreeItems('${myObj.id}','${myObj.itemName}','${myObj.itemDescription}','${myObj.itemPrice}','${myObj.itemQuantity}')>Buy3</button></li>`;
-                parentElement.innerHTML=parentElement.innerHTML+childHTML;
+            showInventoryReportOnScreen(updatedItem);
         }
         </script>
         </html>
